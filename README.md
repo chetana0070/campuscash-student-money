@@ -1,57 +1,60 @@
-# CampusCash AI — Cubbie Hackathon Track 1
+# CampusCash AI
 
-An iMessage-first student money copilot combining **30-day cash-flow forecasts** with **six-city Greater Phoenix Price Scout**. The Skill helps college students protect essentials, compare current public offers, and make budget-aware buying or rental choices. All bundled prices and vendors are **fictional**. Live prices and inventory are **not** embedded in this repository.
+**Spend smarter. Protect essentials. Find better value locally.**
 
-## Capabilities
+CampusCash AI is a student-focused financial decision assistant for [Cubbie](https://cubbie.ai/). It helps students plan upcoming bills, understand cash-flow risks, compare local prices, and explore optional ways to save—through a messaging conversation.
 
-- Cash-flow forecasting with dated income and expenses, minimum balance buffer, and missed-paycheck stress scenario.
-- Price comparisons across Tempe, Chandler, Mesa, Phoenix, Scottsdale and Gilbert for groceries, electronics, rooms/housing, restaurants by cuisine and service mode.
-- **Car rentals** across these six cities, comparing same dates, vehicle class, fees, age-related surcharges, protection options, mileage and fuel estimates; refundable card holds separate from costs.
-- **Dress rentals** across these six cities, comparing rental periods, size availability, cleaning/return costs and refundable deposits.
-- **Clothing and general shopping** across these six cities, accounting for item condition, size, applicable fees, travel and verified return policies.
-- Optional 'Can I afford this?' step using the existing cash-flow script, never making purchases or bookings.
-- **Savings Coach:** voluntary ways to reduce nonessential spending, account for campus obligations first, calculate cautious hypothetical leftover cash, and explore emergency savings or other optional uses without auto-transfers or product endorsements.
+**Supported Arizona cities:** Tempe, Chandler, Mesa, Phoenix, Scottsdale, and Gilbert. Search a single city or compare eligible options across the region.
 
-Every physical seller, restaurant, property, rental pickup and rental return must be in a **selected city among Tempe, Chandler, Mesa, Phoenix, Scottsdale and Gilbert (AZ)**. A search can target one city or all six, and cross-city rankings require estimated travel and tax inputs. The script does not independently geocode or search the web; Cubbie or the student supplies verified current public quotes with source links and dates.
+## What CampusCash can help with
 
-## Windows local commands
+| Capability | Student benefit |
+| --- | --- |
+| **Cash-flow planning** | Forecast balances from upcoming paychecks, expenses, and a chosen minimum cash buffer. |
+| **Can I afford this?** | Explore how a possible purchase could affect rent, tuition, groceries, and other essential expenses. |
+| **Delayed-paycheck scenarios** | Understand the effect of missing or late expected income. |
+| **Grocery Price Scout** | Compare matching grocery quantities using sourced price information and estimated total cost. |
+| **Restaurants by cuisine** | Explore dining by cuisine, dietary preferences, city, meal type, and estimated price. |
+| **Electronics and shopping** | Compare items such as iPads, clothing, thrift finds, and dorm essentials, including relevant fees and item condition. |
+| **Housing comparisons** | Consider rent, utilities, deposits, move-in costs, and commuting tradeoffs. |
+| **Car and dress rentals** | Compare relevant rental costs, refundable deposits, eligibility conditions, and return terms. |
+| **Savings Coach** | Explore optional spending reductions, savings goals, and ways to protect money for essential bills. |
 
-From `campuscash-student-money` in Windows Command Prompt:
+## How to use CampusCash
 
-```cmd
-py scripts\cashflow.py --sample
-py scripts\compare_offers.py --sample
-py scripts\compare_offers.py --restaurant-sample
-py scripts\compare_offers.py --car-sample
-py scripts\compare_offers.py --dress-sample
-py scripts\compare_offers.py --shopping-sample
-py scripts\savings_coach.py --sample
-py -m unittest discover -s tests -v
-```
+1. Open a conversation with **Cubbie** on a supported messaging service.
+2. Send the Skill link: **https://github.com/chetana0070/campuscash-student-money**.
+3. Review and approve installation when Cubbie requests permission. If you've already installed it, ask Cubbie to update the Skill from this repository.
+4. Ask a question in everyday language. Share only the financial details or shopping preferences relevant to your request.
+5. Review the assumptions, available source links, estimates, and cautions before deciding whether to act.
 
-To validate with the downloaded organizer kit:
+## Example questions
 
-```cmd
-py "%USERPROFILE%\OneDrive\Documents\cubbie-hackathon-kit\skills\cubbie-skill-creator\scripts\validate_cubbie_skill.py" .
-```
+> **Budget:** "I have $325, rent is $600 on November 1, and I expect a $400 paycheck on October 27. Can I afford a $40 dinner?"
 
-## Install or update in Cubbie
+> **Groceries:** "Compare a dozen large eggs in Tempe and Mesa, including available prices and travel costs."
 
-1. Publish the contents of this repository at https://github.com/chetana0070/campuscash-student-money .
-2. Share the GitHub repository URL in the Cubbie conversation and explicitly ask Cubbie to **update** the installed Skill from the latest commit.
-3. Wait for Cubbie to confirm which version was installed, then run a fictional comparison prompt. Validate the numerical output against the CLI demo.
-4. Record the **real Cubbie response**, not fabricated screenshots, for any hackathon demo.
+> **Restaurants:** "Help me find vegetarian Indian lunch options in Tempe under $15."
 
-## Privacy and trust
+> **Electronics:** "Compare the same iPad model at retailers around the Phoenix metro area, including available student discounts."
 
-No banking passwords, real account data, identity documents, card details, or sensitive receipts in public GitHub. No external finance server. No automatic purchases, rental reservations, lease agreements or deposits. Treat pricing, student discounts, driver eligibility and deposit/insurance policies as unverified until checked at the actual Tempe vendor.
+> **Housing:** "Compare rental rooms in Tempe and Chandler, including utilities, deposits, and commuting tradeoffs."
 
-Savings Coach always gives optional, no-compulsion, at-your-own-risk guidance. See `references/savings-coach.md`.
+> **Car rental:** "What should I compare when renting an economy car in Tempe for the weekend?"
 
-Detailed sourcing instructions: `references/price-scout.md`, `references/tempe-restaurants.md` and `references/tempe-shopping-rentals.md`.
+> **Savings:** "After paying tuition, rent, and groceries, what optional ways could I save extra money?"
 
-## Regional Price Scout demo (six cities; fictional data)
+## Transparency and privacy
 
-Run `py scripts\compare_offers.py --metro-sample` on Windows, or `python3 scripts/compare_offers.py --metro-sample` on Linux. This compares fictional stores in all six cities using unit costs and entered transportation estimates; no real stores or prices are implied.
+- **Prices and availability:** Local comparisons require current, verifiable listings. CampusCash does not guarantee live inventory, universal lowest prices, or student-discount eligibility.
+- **Full cost:** Where supported, comparisons account for relevant taxes, service fees, travel, deposits, and other charges. Unknown amounts must be disclosed rather than invented.
+- **Financial forecasts:** Scenarios depend on information provided by the student, including assumptions about income timing and expenses. They are not bank-verified or guaranteed predictions.
+- **User control:** CampusCash does not automatically buy products, reserve rentals, sign leases, move funds, or invest money. Do not share bank passwords, full payment-card numbers, or sensitive identity documents.
 
-See `references/metro-coverage.md` for the `cities` JSON format, limitations, and regional search policy.
+## Financial disclaimer
+
+**CampusCash provides optional educational suggestions, not personalized financial or investment advice. There is no obligation or compulsion to act. Any action you choose to take is your own decision and at your own risk.** Verify prices, fees, terms, eligibility, and potential losses independently before taking action.
+
+---
+
+*Created for the Cubbie Hackathon. Bundled example data is fictional; current real-world information must be independently verified.*
