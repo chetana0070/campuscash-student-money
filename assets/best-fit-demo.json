@@ -1,0 +1,53 @@
+{
+  "as_of": "2026-10-24",
+  "category": "shopping",
+  "city": "Tempe",
+  "state": "AZ",
+  "item": "FICTIONAL item: demonstrate best value vs cheapest",
+  "comparison_key": "same-fictitious-item",
+  "quantity_needed": 1,
+  "decision": {
+    "priority": "best_value",
+    "max_total_cost": "30"
+  },
+  "offers": [
+    {
+      "seller": "FICTIONAL Lowest Price Store",
+      "city": "Tempe",
+      "state": "AZ",
+      "address": "100 Fictional Test Ave, Tempe, AZ (NOT REAL)",
+      "location_verified": true,
+      "source_url": "https://example.com/fictional-offer",
+      "checked_at": "2026-10-24",
+      "comparison_key": "same-fictitious-item",
+      "available": true,
+      "price": "20.00",
+      "pack_quantity": 1,
+      "tax_estimate": "0",
+      "travel_cost": "0",
+      "quality_rating_5": "2.0",
+      "rating_source_url": "https://example.com/fictional-reviews",
+      "rating_checked_at": "2026-10-24",
+      "return_policy_checked": true
+    },
+    {
+      "seller": "FICTIONAL Best Rated Store",
+      "city": "Tempe",
+      "state": "AZ",
+      "address": "100 Fictional Test Ave, Tempe, AZ (NOT REAL)",
+      "location_verified": true,
+      "source_url": "https://example.com/fictional-offer",
+      "checked_at": "2026-10-24",
+      "comparison_key": "same-fictitious-item",
+      "available": true,
+      "price": "24.00",
+      "pack_quantity": 1,
+      "tax_estimate": "0",
+      "travel_cost": "0",
+      "quality_rating_5": "4.8",
+      "rating_source_url": "https://example.com/fictional-reviews",
+      "rating_checked_at": "2026-10-24",
+      "return_policy_checked": true
+    }
+  ]
+}

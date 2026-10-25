@@ -51,6 +51,70 @@ def dollars(value):
     return format(value.quantize(Decimal('.01')), '.2f')
 
 
+
+def decision_support(data, ranked_offers, category, cost_field):
+    """Optional transparent value comparison; never invents quality or substitutions.
+
+    The existing cost ranking remains authoritative for price. Quality ratings are
+    only considered when their sources and dates have been supplied and checked.
+    """
+    decision = data.get('decision', {})
+    if not isinstance(decision, dict):
+        raise ValueError('decision must be an object')
+    priority = decision.get('priority', 'best_value')
+    if priority not in ('lowest_cost', 'best_value', 'highest_quality'):
+        raise ValueError('decision priority must be lowest_cost, best_value or highest_quality')
+    budget = dec(decision['max_total_cost'], 'max_total_cost') if 'max_total_cost' in decision else None
+    upfront_limit = dec(decision['max_upfront_cash'], 'max_upfront_cash') if 'max_upfront_cash' in decision else None
+    eligible = []
+    for row in ranked_offers:
+        cost = Decimal(row[cost_field])
+        if budget is not None and cost > budget:
+            continue
+        if upfront_limit is not None:
+            cash = row.get('potential_funds_needed_including_hold', row.get('approx_move_in_cash'))
+            if cash is None or Decimal(cash) > upfront_limit:
+                continue
+        eligible.append(row)
+    cheapest = eligible[0]['seller'] if eligible else None
+    rated = [row for row in eligible if 'sourced_rating_5' in row]
+    complete_ratings = bool(eligible) and len(rated) == len(eligible)
+    quality_pick = value_pick = None
+    if complete_ratings:
+        quality_pick = max(eligible, key=lambda row: (Decimal(row['sourced_rating_5']), -Decimal(row[cost_field])))['seller']
+        # This is a narrow metric, not a general claim about objective value.
+        if all(Decimal(row[cost_field]) > 0 for row in eligible):
+            value_pick = max(eligible, key=lambda row: (Decimal(row['sourced_rating_5']) / Decimal(row[cost_field]),
+                                                        -Decimal(row[cost_field])))['seller']
+    choices = {'lowest_cost': cheapest, 'highest_quality': quality_pick, 'best_value': value_pick}
+    recommended = choices[priority]
+    suggestions = {
+        'grocery': ['Compare another verified store or package size for the same quantity.'],
+        'electronics': ['Ask permission to compare a compatible refurbished or alternative model; verify warranty and required specifications.'],
+        'housing': ['Ask permission to explore other selected cities or a different room type; keep budget, safety and lease dates intact.'],
+        'restaurant': ['Try another verified location or comparable dish matching dietary and allergy needs.'],
+        'car_rental': ['Check other eligible rental branches or dates with the same vehicle and coverage requirements.'],
+        'dress_rental': ['Check another verified size-available style, retailer or date without changing the required fit.'],
+        'clothing': ['Look for a similar size-available item, secondhand or rental, after confirming acceptable differences.'],
+        'shopping': ['Check comparable brands or a verified secondhand option after confirming acceptable differences.'],
+    }[category]
+    return {
+        'priority': priority,
+        'within_budget_verified_offer_count': len(eligible),
+        'lowest_total_cost_option': cheapest,
+        'highest_sourced_rating_option': quality_pick,
+        'highest_sourced_rating_per_dollar_option': value_pick,
+        'recommended_option': recommended,
+        'ratings_documented_for_all_eligible_quotes': complete_ratings,
+        'exact_match_found': bool(eligible),
+        'next_best_search_steps_if_unavailable': suggestions if not eligible else [],
+        'note': ('Best is not synonymous with cheapest. Rating-per-dollar is only one narrow proxy;'
+                 ' it is calculated only when all eligible offers have recent supplied ratings and linked sources. Source URLs are not independently verified by this script.'
+                 ' Suitability, accessibility, policies, quality, reviews, location, and user requirements'
+                 ' still need independent evaluation. No exact match among checked quotes does'
+                 ' not mean no option exists. Never relax mandatory requirements without consent.'),
+    }
+
 def compare(data):
     if not isinstance(data, dict):
         raise ValueError('Input must be a JSON object')
@@ -200,6 +264,20 @@ def compare(data):
                 row['address'] = str(offer['address'])
                 if mode in ('car_rental', 'dress_rental'):
                     row['return_city'] = normalize_city(offer.get('return_city'))
+                # Only pass through supplied recent ratings with a source URL; source authenticity must be verified separately.
+                if all(k in offer for k in ('quality_rating_5', 'rating_source_url', 'rating_checked_at')):
+                    try:
+                        rating = dec(offer['quality_rating_5'], 'quality_rating_5')
+                        rating_date = dt.date.fromisoformat(offer['rating_checked_at'])
+                        rating_url = offer['rating_source_url']
+                        if (rating <= 5 and date >= rating_date
+                                and (date - rating_date).days <= 90
+                                and isinstance(rating_url, str)
+                                and rating_url.startswith(('https://','http://'))):
+                            row['sourced_rating_5'] = str(rating)
+                            row['rating_source_url'] = rating_url
+                    except (ValueError, TypeError):
+                        pass  # An unsupported rating cannot influence a quality recommendation.
                 found.append(row)
         except (KeyError, ValueError, TypeError) as error:
             excluded.append({'seller': name, 'reason': f'incomplete or invalid quote: {error}'})
@@ -215,7 +293,8 @@ def compare(data):
             'ranked_by_cuisine': by_cuisine if mode == 'restaurant' else None, 'item': data.get('item', ''), 'as_of': date.isoformat(),
             'comparison_key': key, 'ranked_offers': found, 'excluded_offers': excluded,
             'lowest_comparable_quote': found[0]['seller'] if found and (mode != 'restaurant' or len(by_cuisine) == 1) else None,
-            'note': 'Rankings use only provided quotes tagged as verified within the selected six-city Arizona coverage area. This calculator does not independently verify municipal boundaries, travel estimates, addresses, inventory, prices, rental eligibility, terms, or links. For cross-city comparisons include travel/commute costs. Rental deposits are temporary holds, not spending. Best means cheapest only among checked comparable offers. Dress rentals and purchases must be compared separately.'}
+            'decision_support': decision_support(data, found, mode, field),
+            'note': 'Rankings use only provided quotes tagged as verified within the selected six-city Arizona coverage area. This calculator does not independently verify municipal boundaries, travel estimates, addresses, inventory, prices, rental eligibility, terms, or links. For cross-city comparisons include travel/commute costs. Rental deposits are temporary holds, not spending. Lowest cost means cheapest only among checked comparable offers; best overall requires evidence of suitability and quality. Dress rentals and purchases must be compared separately.'}
 
 
 if __name__ == '__main__':
@@ -227,12 +306,13 @@ if __name__ == '__main__':
     p.add_argument('--dress-sample', action='store_true')
     p.add_argument('--shopping-sample', action='store_true')
     p.add_argument('--metro-sample', action='store_true', help='Compare six-city fictional grocery quotes')
+    p.add_argument('--best-fit-sample', action='store_true', help='Compare quality and cost for fictional offers')
     args = p.parse_args()
-    if not any((args.sample, args.restaurant_sample, args.car_sample, args.dress_sample, args.shopping_sample, args.metro_sample, args.input)):
-        p.error('pass --input <private-json>, --sample, --restaurant-sample, --car-sample, --dress-sample, --shopping-sample or --metro-sample')
+    if not any((args.sample, args.restaurant_sample, args.car_sample, args.dress_sample, args.shopping_sample, args.metro_sample, args.best_fit_sample, args.input)):
+        p.error('pass --input <private-json>, --sample, --restaurant-sample, --car-sample, --dress-sample, --shopping-sample, --metro-sample or --best-fit-sample')
     demos = {'sample': 'price-demo.json', 'restaurant_sample': 'restaurant-demo.json',
              'car_sample': 'car-rental-demo.json', 'dress_sample': 'dress-rental-demo.json',
-             'shopping_sample': 'shopping-demo.json', 'metro_sample': 'metro-demo.json'}
+             'shopping_sample': 'shopping-demo.json', 'metro_sample': 'metro-demo.json', 'best_fit_sample': 'best-fit-demo.json'}
     selected = next((name for flag, name in demos.items() if getattr(args, flag)), None)
     path = (Path(__file__).resolve().parents[1] / 'assets' / selected) if selected else args.input
     try:
