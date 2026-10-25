@@ -1,0 +1,49 @@
+{
+  "as_of": "2026-10-24",
+  "city": "Tempe",
+  "state": "AZ",
+  "category": "clothing",
+  "item": "new size M black dress",
+  "comparison_key": "black-midi-dress-size-M-new",
+  "quantity_needed": 1,
+  "offers": [
+    {
+      "city": "Tempe",
+      "state": "AZ",
+      "address": "123 Fictional Street, Tempe AZ \u2014 DEMO ONLY",
+      "location_verified": true,
+      "source_url": "https://example.org/fake-quote",
+      "checked_at": "2026-10-24",
+      "available": true,
+      "seller": "Demo Fashion Shop A",
+      "comparison_key": "black-midi-dress-size-M-new",
+      "size_available": true,
+      "return_policy_checked": true,
+      "price": "34.00",
+      "pack_quantity": 1,
+      "tax_estimate": "2.75",
+      "delivery_fee": "0.00",
+      "travel_cost": "3.00",
+      "other_fees": "0.00"
+    },
+    {
+      "city": "Tempe",
+      "state": "AZ",
+      "address": "123 Fictional Street, Tempe AZ \u2014 DEMO ONLY",
+      "location_verified": true,
+      "source_url": "https://example.org/fake-quote",
+      "checked_at": "2026-10-24",
+      "available": true,
+      "seller": "Demo Fashion Shop B",
+      "comparison_key": "black-midi-dress-size-M-new",
+      "size_available": true,
+      "return_policy_checked": true,
+      "price": "28.00",
+      "pack_quantity": 1,
+      "tax_estimate": "2.30",
+      "delivery_fee": "0.00",
+      "travel_cost": "7.00",
+      "other_fees": "0.00"
+    }
+  ]
+}

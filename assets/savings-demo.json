@@ -1,0 +1,27 @@
+{
+  "as_of": "2026-10-24",
+  "currency": "USD",
+  "starting_balance": "1200.00",
+  "minimum_buffer": "300.00",
+  "essentials_reviewed": true,
+  "events": [
+    {"date":"2026-10-28", "label":"Confirmed paycheck", "amount":"400.00", "status":"confirmed"},
+    {"date":"2026-11-01", "label":"Rent", "amount":"-650.00", "status":"confirmed"},
+    {"date":"2026-11-05", "label":"Tuition installment", "amount":"-240.00", "status":"confirmed"},
+    {"date":"2026-11-08", "label":"Groceries", "amount":"-100.00", "status":"planned"},
+    {"date":"2026-11-10", "label":"Utilities", "amount":"-60.00", "status":"expected"}
+  ],
+  "hypothetical_reduction_percent": "10",
+  "monthly_spending": [
+    {"category":"Dining out", "amount":"180.00", "essential":false},
+    {"category":"Clothing extras", "amount":"80.00", "essential":false},
+    {"category":"Optional subscriptions", "amount":"30.00", "essential":false},
+    {"category":"Rent", "amount":"650.00", "essential":true}
+  ],
+  "savings_goal": {
+    "name":"Emergency fund",
+    "target_amount":"500.00",
+    "already_saved":"120.00",
+    "target_date":"2027-01-31"
+  }
+}

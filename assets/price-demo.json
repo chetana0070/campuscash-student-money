@@ -1,0 +1,41 @@
+{
+  "as_of": "2026-10-24",
+  "category": "grocery",
+  "item": "12 large eggs",
+  "comparison_key": "large-eggs-dozen",
+  "quantity_needed": 12,
+  "offers": [
+    {
+      "seller": "Fictional Market A",
+      "source_url": "https://example.com/market-a",
+      "checked_at": "2026-10-24",
+      "comparison_key": "large-eggs-dozen",
+      "available": true,
+      "pack_quantity": 12,
+      "price": "3.80",
+      "tax_estimate": "0",
+      "travel_cost": "1.20",
+      "city": "Tempe",
+      "state": "AZ",
+      "location_verified": true,
+      "address": "100 Demo Street, Tempe, AZ (FICTIONAL)"
+    },
+    {
+      "seller": "Fictional Market B",
+      "source_url": "https://example.com/market-b",
+      "checked_at": "2026-10-24",
+      "comparison_key": "large-eggs-dozen",
+      "available": true,
+      "pack_quantity": 6,
+      "price": "2.00",
+      "tax_estimate": "0",
+      "travel_cost": "0.50",
+      "city": "Tempe",
+      "state": "AZ",
+      "location_verified": true,
+      "address": "101 Demo Street, Tempe, AZ (FICTIONAL)"
+    }
+  ],
+  "city": "Tempe",
+  "state": "AZ"
+}
